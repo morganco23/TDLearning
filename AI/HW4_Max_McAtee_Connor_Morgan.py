@@ -132,15 +132,18 @@ class AIPlayer(Player):
 		allmoves = listAllLegalMoves(currentState)
 		mymove = allmoves[random.randint(0,len(allmoves) - 1)]
 
-		#TODO: add explore vs Exploit
-		#currently exploiting
-		for move in allmoves:
-			if self.states.get(self.decideCategory(getNextStateAdversarial(currentState, mymove))) == None:
-				continue
-			elif self.states.get(self.decideCategory(getNextStateAdversarial(currentState, move))) == None:
-				continue
-			elif self.states[self.decideCategory(getNextStateAdversarial(currentState, mymove))] < self.states[self.decideCategory(getNextStateAdversarial(currentState, move))]:
-				mymove = move
+		#currently explore 50% of the time
+		if random.randint(0,1) == 1:
+			for move in allmoves:
+				# the outcome of our currently selected move is not in the state space
+				if self.states.get(self.decideCategory(getNextStateAdversarial(currentState, mymove))) == None:
+					continue
+				# the outcome of the current move is not in the state space
+				elif self.states.get(self.decideCategory(getNextStateAdversarial(currentState, move))) == None:
+					continue
+				# lets check if the current move is better than our selected move
+				elif self.states[self.decideCategory(getNextStateAdversarial(currentState, mymove))] < self.states[self.decideCategory(getNextStateAdversarial(currentState, move))]:
+					mymove = move
 
 
 		#don't want ants if we already have 1
