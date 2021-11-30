@@ -132,8 +132,8 @@ class AIPlayer(Player):
 		allmoves = listAllLegalMoves(currentState)
 		mymove = allmoves[random.randint(0,len(allmoves) - 1)]
 
-		#currently explore 50% of the time
-		if random.randint(0,1) == 1:
+		#currently explore 5% of the time
+		if random.randint(0,19) != 0:
 			for move in allmoves:
 				# the outcome of our currently selected move is not in the state space
 				if self.states.get(self.decideCategory(getNextStateAdversarial(currentState, mymove))) == None:
@@ -192,7 +192,16 @@ class AIPlayer(Player):
 		#we save after every game to not lose progress
 		self.save()
 	
-
+	##
+	#updateStateSpace
+	#
+	#Description: updates the local state dictionary with the new state using the
+	#				TD Learning equation
+	#
+	#Parameters:
+	#	reward 		- the reward for this state
+	#	thiState 	- the state we are adding to the statespace
+	#	nextState 	- the next state used to calculate the TD equation
 	def updateStateSpace(self,reward,thiState, nextState):
 		thisCategory = self.decideCategory(thiState)
 		thisUtility = self.states.setdefault(thisCategory, 0)
@@ -203,7 +212,16 @@ class AIPlayer(Player):
 
 		self.states[thisCategory] = newVal
 
-
+	##
+	#decideCategory
+	#
+	#Description: determines the category given the state
+	#
+	#Parameters:
+	#	state - the state to categorize
+	#
+	#Return
+	#	category - the category of a state in a string format
 	def decideCategory(self, state):
 		#will return a category that will 
 		#be a # separated list of of the category values
@@ -241,7 +259,10 @@ class AIPlayer(Player):
 		return category
 
 
-
+	##
+	#save
+	#
+	#Description: saves the state space to the global variable FILENAME
 	def save(self):
 		f = open(FILENAME, "w")
 		towrite = ""
